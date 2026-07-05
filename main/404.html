@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@500&display=swap" rel="stylesheet">
+<title>404 :c</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    background: url("assets/black.png") center/cover no-repeat;
+    font-family: "Chillax", sans-serif;
+}
+
+.nav {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 50px;
+    z-index: 100;
+}
+
+.top-button {
+    color: #bdbdbd;
+    text-decoration: none;
+    font-size: 18px;
+    transition: .2s;
+}
+
+.top-button:hover {
+    color: white;
+    transform: scale(1.12);
+}
+
+.top-button.active {
+    color: #7dd3fc;
+}
+
+img {
+    width: 200px;
+    max-width: 90vw;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    transform: translateY(-130px);
+}
+
+.text {
+    position: absolute;
+    top: calc(50% + -20px);
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: white;
+}
+
+.text h1 {
+    font-size: 26px;
+    text-shadow:
+        0 0 10px rgba(255,255,255,0.6),
+        0 0 25px rgba(255,255,255,0.3);
+}
+
+.text p {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-top: 5px;
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+    <a href="/card" class="top-button">me</a>
+    <a href="/" class="top-button">home</a>
+    <a href="/404" class="top-button">projects <i>(wip)</i></a>
+</div>
+
+<img src="assets/404.gif" alt="404">
+
+<div class="text">
+    <h1>404</h1>
+    <p>this page doesn’t exist</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<title>home</title>
+</head>
+
+<body>
+
+<div class="nav">
+    <a href="/card" class="top-button">me</a>
+    <a href="/" class="top-button active">home</a>
+    <a href="/" class="top-button">projects <i>(wip)</i></a>
+</div>
+
+<div class="clock-area">
+
+    <div class="clock-block">
+        <div class="clock">
+            <div class="hand hour" id="hour"></div>
+            <div class="hand min" id="min"></div>
+            <div class="hand sec" id="sec"></div>
+        </div>
+
+        <div id="text-time"></div>
+    </div>
+
+    <div class="discord-block">
+        <div class="discord-status">
+            <img
+                src="https://lanyard.cnrad.dev/api/141234854837616641?bg=00000000&showDisplayName=true"
+                alt="Discord Status">
+        </div>
+    </div>
+
+</div>
+
+<div class="loader">
+    <img src="assets/sad.gif" alt="gif">
+</div>
+
+<script>
+function updateClock() {
+    const now = new Date();
+
+    const uk = new Date(
+        now.toLocaleString("en-US", { timeZone: "Europe/London" })
+    );
+
+    const sec = uk.getSeconds();
+    const min = uk.getMinutes();
+    const hour = uk.getHours();
+
+    const secDeg = sec * 6;
+    const minDeg = min * 6 + sec * 0.1;
+    const hourDeg = (hour % 12) * 30 + min * 0.5;
+
+    document.getElementById("sec").style.transform =
+        `translateX(-50%) rotate(${secDeg}deg)`;
+
+    document.getElementById("min").style.transform =
+        `translateX(-50%) rotate(${minDeg}deg)`;
+
+    document.getElementById("hour").style.transform =
+        `translateX(-50%) rotate(${hourDeg}deg)`;
+}
+
+function updateTextTime() {
+    const now = new Date();
+
+    const uk = new Date(
+        now.toLocaleString("en-US", { timeZone: "Europe/London" })
+    );
+
+    const h = String(uk.getHours()).padStart(2, "0");
+    const m = String(uk.getMinutes()).padStart(2, "0");
+    const s = String(uk.getSeconds()).padStart(2, "0");
+
+    document.getElementById("text-time").textContent =
+        `${h}:${m}:${s}`;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+updateTextTime();
+setInterval(updateTextTime, 1000);
+</script>
+
+<div class="home-text">
+    this is all very likely broken on mobile <br>
+    ill fix it soon maybe :p
+</div>
+
+</body>
+</html>
