@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nruv.dev</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+</head>
+<body>
+
+<!-- <audio id="bgm" src="assets/music.mp3" preload="auto" loop></audio> -->
+
+  <canvas id="gridCanvas"></canvas>
+
+  <div id="custom-cursor" class="hidden">
+    <div class="cursor-horizontal"></div>
+    <div class="cursor-vertical"></div>
+  </div>
+
+  <div class="main-container" id="mainContainer">
+    <div class="eye-wrapper" id="eyeWrapper">
+      <button id="eyeButton" aria-label="Eye Button">
+        <svg class="neon-eye" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="blur1" />
+              <feGaussianBlur stdDeviation="5" result="blur2" />
+              <feMerge>
+                <feMergeNode in="blur2" />
+                <feMergeNode in="blur1" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <g filter="url(#glow)" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 10,95 Q 150,-37 290,95" stroke-width="3" />
+            <path d="M 20,105 Q 150,-10 280,105 Q 150,220 20,105 Z" stroke-width="3" />
+            <circle cx="150" cy="105" r="44" stroke-width="2.5" />
+
+            <g id="pupilGroup">
+              <circle cx="150" cy="105" r="18" fill="#ffffff" stroke="none" />
+            </g>
+          </g>
+        </svg>
+      </button>
+    </div>
+
+    <a href="https://nruv.dev/i" class="click-link">click me</a>
+
+    <!-- <button id="muteBtn" class="mute-btn" aria-label="Toggle Mute">
+      <img id="muteIcon" src="assets/unmuted.png" alt="Mute toggle">
+    </button> -->
+  </div>
+
+  <!-- <img id="realEyeOverlay" src="assets/eye.png" alt="Realistic Eye"> -->
+
+  <script>
+    const text = "nruv.dev";
+    let i = 0;
+    let direction = 1;
+
+    function animateTitle() {
+        document.title = text.substring(0, i);
+
+        i += direction;
+
+        if (i > text.length) {
+            i = text.length;
+            direction = -1;
+            setTimeout(animateTitle, 900);
+            return;
+        }
+
+        if (i < 1) {
+            i = 1;
+            direction = 1;
+            setTimeout(animateTitle, 500);
+            return;
+        }
+
+        setTimeout(animateTitle, 180);
+    }
+    animateTitle();
+  </script>
+
+  <script>
+    /* const audio = document.getElementById("bgm");
+    const muteBtn = document.getElementById("muteBtn");
+    const muteIcon = document.getElementById("muteIcon");
+    audio.volume = 0.15;
+
+    document.getElementById("eyeButton").addEventListener("click", () => {
+        if (audio.paused) {
+            audio.play();
+        }
+    }, { once: true });
+
+    muteBtn.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        muteIcon.src = audio.muted ? "assets/muted.png" : "assets/unmuted.png";
+    }); */
+
+    const pupilGroup = document.getElementById('pupilGroup');
+    const eyeWrapper = document.getElementById('eyeWrapper');
+    const maxRadius = 18;
+
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    const ease = 0.08;
+
+    window.addEventListener('mousemove', (e) => {
+      const rect = eyeWrapper.getBoundingClientRect();
+      const eyeCenterX = rect.left + rect.width / 2;
+      const eyeCenterY = rect.top + rect.height / 2;
+
+      const dx = e.clientX - eyeCenterX;
+      const dy = e.clientY - eyeCenterY;
+
+      const angle = Math.atan2(dy, dx);
+      const distance = Math.min(Math.hypot(dx, dy), maxRadius);
+
+      targetX = Math.cos(angle) * distance;
+      targetY = Math.sin(angle) * distance;
+    });
+
+    function animateEye() {
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+
+      currentX += dx * ease;
+      currentY += dy * ease;
+
+      if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) {
+        currentX = targetX;
+        currentY = targetY;
+      }
+
+      pupilGroup.style.transform = `translate3d(${currentX.toFixed(3)}px, ${currentY.toFixed(3)}px, 0)`;
+      requestAnimationFrame(animateEye);
+    }
+    animateEye();
+
+    /* const eyeButton = document.getElementById('eyeButton');
+    let clickTimestamps = [];
+
+    eyeButton.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+
+        const now = Date.now();
+        clickTimestamps.push(now);
+
+        clickTimestamps = clickTimestamps.filter(time => now - time <= 6000);
+
+        if (clickTimestamps.length >= 6) {
+            clickTimestamps = [];
+
+            document.body.classList.add('active-scare');
+
+            setTimeout(() => {
+                document.body.classList.remove('active-scare');
+            }, 3000);
+        }
+    }); */
+
+    const cursor = document.getElementById("custom-cursor");
+    const canvas = document.getElementById("gridCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let mouseX = -1000;
+    let mouseY = -1000;
+    let hasMoved = false;
+
+    const gridSize = 52; 
+    const spotlightRadius = 285; 
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function traceGridPath() {
+      ctx.beginPath();
+      for (let x = 0; x <= canvas.width; x += gridSize) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+      }
+      for (let y = 0; y <= canvas.height; y += gridSize) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+      }
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if(document.body.classList.contains('active-scare')) {
+        requestAnimationFrame(drawGrid);
+        return;
+      }
+
+      const eyeRect = eyeWrapper.getBoundingClientRect();
+      const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+      const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+
+      const radiusX = (eyeRect.width / 2) + 15; 
+      const radiusY = (eyeRect.height / 2) + 10; 
+
+      ctx.save();
+      
+      ctx.beginPath();
+      ctx.ellipse(eyeCenterX, eyeCenterY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+      ctx.clip();
+
+      traceGridPath();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)"; 
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+
+      if (hasMoved) {
+        ctx.save();
+        const gradient = ctx.createRadialGradient(
+          mouseX, mouseY, 0,
+          mouseX, mouseY, spotlightRadius
+        );
+        gradient.addColorStop(0, "rgba(255, 255, 255, 0.25)");
+        gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.08)");
+        gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        traceGridPath();
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(drawGrid);
+    }
+    drawGrid();
+
+    window.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      cursor.style.left = `${mouseX}px`;
+      cursor.style.top = `${mouseY}px`;
+
+      hasMoved = true;
+      cursor.classList.remove("hidden");
+    });
+
+    window.addEventListener("mouseout", (e) => {
+      if (!e.relatedTarget && !e.toElement) {
+        cursor.classList.add("hidden");
+        hasMoved = false;
+      }
+    });
+
+    window.addEventListener("blur", () => {
+      cursor.classList.add("hidden");
+      hasMoved = false;
+    });
+
+    window.addEventListener("focus", () => {
+      if (hasMoved) {
+        cursor.classList.remove("hidden");
+      }
+    });
+  </script>
+
+</body>
+</html>
