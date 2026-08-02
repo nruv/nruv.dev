@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" type="image/png" href="assets/icon.png">
+
+  <title>nruv.dev</title>
+</head>
+
+<body>
+
+  <div id="custom-cursor" class="hidden">
+    <div class="cursor-horizontal"></div>
+    <div class="cursor-vertical"></div>
+  </div>
+
+  <div id="entry">
+    <div class="entry-box">
+      click to enter...
+    </div>
+  </div>
+
+  <div class="stars" id="stars">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <audio id="bgm" src="assets/music.mp3" preload="auto" loop></audio>
+
+  <div class="card" id="mainContent">
+
+    <img class="pfp" src="assets/avatar.png" alt="Avatar">
+
+    <div class="name-area">
+      <h1 class="light-sweep">nruv</h1>
+      <div class="uid-tooltip">UID 1</div>
+    </div>
+
+    <p id="typing"></p>
+
+    <div class="badges">
+      <div class="badge" data-tooltip="Staff">
+        <img src="assets/staff.png" alt="Staff Badge">
+      </div>
+    </div>
+
+    <div class="lanyard">
+      <iframe
+        src="https://lanyard.cnrad.dev/api/141234854837616641?bg=00000000&hideBadges=true&hideActivity=true&showDisplayName=true&hideSpotify=true&hideTag=true"
+        frameborder="0"
+        scrolling="no">
+      </iframe>
+    </div>
+
+    <div class="social">
+
+      <button class="nav" id="left" onclick="move(-1)">&lt;</button>
+
+      <div class="viewport">
+        <div class="track" id="track">
+
+          <div class="page">
+            <a href="https://tiktok.com/@78o" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://discord.com/users/141234854837616641" target="_blank" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+            <a href="https://instagram.com/petpl_yer" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+
+          <div class="page">
+            <a href="https://t.me/petpl_yer" target="_blank" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://www.last.fm/user/autopsy9" target="_blank" aria-label="Last.fm"><i class="fa-brands fa-lastfm"></i></a>
+            <a href="https://x.com/interpolHater" target="_blank" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+
+        </div>
+      </div>
+
+      <button class="nav" id="right" onclick="move(1)">&gt;</button>
+    </div>
+
+    <button id="muteBtn" class="mute-btn" aria-label="Toggle Mute">
+      <img id="muteIcon" src="assets/unmuted.png" alt="Mute Icon">
+    </button>
+
+  </div>
+
+  <script>
+    const text = "nruv.dev";
+    let i = 0;
+    let direction = 1;
+
+    function animateTitle() {
+      document.title = text.substring(0, i);
+
+      i += direction;
+
+      if (i > text.length) {
+        i = text.length;
+        direction = -1;
+        setTimeout(animateTitle, 900);
+        return;
+      }
+
+      if (i < 1) {
+        i = 1;
+        direction = 1;
+        setTimeout(animateTitle, 500);
+        return;
+      }
+
+      setTimeout(animateTitle, 180);
+    }
+    animateTitle();
+  </script>
+
+  <script>
+    let page = 0;
+    const track = document.getElementById("track");
+    const pages = document.querySelectorAll(".page").length;
+
+    function move(dir) {
+      page += dir;
+      if (page < 0) page = 0;
+      if (page > pages - 1) page = pages - 1;
+      track.style.transform = `translateX(-${page * 200}px)`;
+    }
+  </script>
+
+  <script>
+    const entry = document.getElementById("entry");
+    const audio = document.getElementById("bgm");
+    const btn = document.getElementById("muteBtn");
+    const icon = document.getElementById("muteIcon");
+
+    const TARGET_VOLUME = 0.15;
+
+    audio.addEventListener("canplaythrough", () => {
+      audio.volume = TARGET_VOLUME;
+    });
+    audio.volume = TARGET_VOLUME;
+
+    entry.addEventListener("click", () => {
+      entry.style.opacity = "0";
+
+      setTimeout(() => {
+        entry.style.display = "none";
+      }, 600);
+
+      audio.volume = TARGET_VOLUME;
+      audio.play().catch((err) => console.warn("Audio error:", err));
+    });
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      audio.muted = !audio.muted;
+      icon.src = audio.muted
+        ? "assets/muted.png"
+        : "assets/unmuted.png";
+    });
+  </script>
+
+  <script>
+    const phrases = [
+      "i do stuff",
+      "i@nruv.dev",
+    ];
+
+    const typing = document.getElementById("typing");
+
+    let phrase = 0;
+    let letter = 0;
+    let deleting = false;
+
+    function typeWriter() {
+      const current = phrases[phrase];
+
+      if (!deleting) {
+        typing.textContent = current.substring(0, letter);
+        letter++;
+
+        if (letter > current.length) {
+          deleting = true;
+          setTimeout(typeWriter, 1800);
+          return;
+        }
+      } else {
+        typing.textContent = current.substring(0, letter);
+        letter--;
+
+        if (letter < 0) {
+          deleting = false;
+          phrase = (phrase + 1) % phrases.length;
+          letter = 0;
+          setTimeout(typeWriter, 300);
+          return;
+        }
+      }
+
+      setTimeout(typeWriter, deleting ? 40 : 80);
+    }
+
+    typeWriter();
+  </script>
+
+  <script>
+    const cursor = document.getElementById("custom-cursor");
+    let hasMoved = false;
+
+    window.addEventListener("mousemove", (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+
+      hasMoved = true;
+      cursor.classList.remove("hidden");
+    });
+
+    window.addEventListener("mouseout", (e) => {
+      if (!e.relatedTarget && !e.toElement) {
+        cursor.classList.add("hidden");
+        hasMoved = false;
+      }
+    });
+
+    window.addEventListener("blur", () => {
+      cursor.classList.add("hidden");
+      hasMoved = false;
+    });
+
+    window.addEventListener("focus", () => {
+      if (hasMoved) {
+        cursor.classList.remove("hidden");
+      }
+    });
+  </script>
+
+</body>
+</html>

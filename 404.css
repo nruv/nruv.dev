@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Chillax';
+  src: url('assets/Chillax-Medium.woff2') format('woff2'),
+       url('assets/Chillax-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
