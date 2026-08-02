@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>nruv.dev</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="assets/icon.png">
 </head>
 <body>
-
-<!-- <audio id="bgm" src="assets/music.mp3" preload="auto" loop></audio> -->
 
   <canvas id="gridCanvas"></canvas>
 
@@ -48,13 +46,7 @@
     </div>
 
     <a href="https://nruv.dev/i" class="click-link">click me</a>
-
-    <!-- <button id="muteBtn" class="mute-btn" aria-label="Toggle Mute">
-      <img id="muteIcon" src="assets/unmuted.png" alt="Mute toggle">
-    </button> -->
   </div>
-
-  <!-- <img id="realEyeOverlay" src="assets/eye.png" alt="Realistic Eye"> -->
 
   <script>
     const text = "nruv.dev";
@@ -86,22 +78,6 @@
   </script>
 
   <script>
-    /* const audio = document.getElementById("bgm");
-    const muteBtn = document.getElementById("muteBtn");
-    const muteIcon = document.getElementById("muteIcon");
-    audio.volume = 0.15;
-
-    document.getElementById("eyeButton").addEventListener("click", () => {
-        if (audio.paused) {
-            audio.play();
-        }
-    }, { once: true });
-
-    muteBtn.addEventListener("click", () => {
-        audio.muted = !audio.muted;
-        muteIcon.src = audio.muted ? "assets/muted.png" : "assets/unmuted.png";
-    }); */
-
     const pupilGroup = document.getElementById('pupilGroup');
     const eyeWrapper = document.getElementById('eyeWrapper');
     const maxRadius = 18;
@@ -110,19 +86,30 @@
     let currentX = 0, currentY = 0;
     const ease = 0.08;
 
-    window.addEventListener('mousemove', (e) => {
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+    // Updated eye tracking logic to support pointer events across entire screen
+    function updateEyePosition(clientX, clientY) {
       const rect = eyeWrapper.getBoundingClientRect();
       const eyeCenterX = rect.left + rect.width / 2;
       const eyeCenterY = rect.top + rect.height / 2;
 
-      const dx = e.clientX - eyeCenterX;
-      const dy = e.clientY - eyeCenterY;
+      const dx = clientX - eyeCenterX;
+      const dy = clientY - eyeCenterY;
 
       const angle = Math.atan2(dy, dx);
       const distance = Math.min(Math.hypot(dx, dy), maxRadius);
 
       targetX = Math.cos(angle) * distance;
       targetY = Math.sin(angle) * distance;
+    }
+
+    window.addEventListener('pointermove', (e) => {
+      updateEyePosition(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('pointerdown', (e) => {
+      updateEyePosition(e.clientX, e.clientY);
     });
 
     function animateEye() {
@@ -141,28 +128,6 @@
       requestAnimationFrame(animateEye);
     }
     animateEye();
-
-    /* const eyeButton = document.getElementById('eyeButton');
-    let clickTimestamps = [];
-
-    eyeButton.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-
-        const now = Date.now();
-        clickTimestamps.push(now);
-
-        clickTimestamps = clickTimestamps.filter(time => now - time <= 6000);
-
-        if (clickTimestamps.length >= 6) {
-            clickTimestamps = [];
-
-            document.body.classList.add('active-scare');
-
-            setTimeout(() => {
-                document.body.classList.remove('active-scare');
-            }, 3000);
-        }
-    }); */
 
     const cursor = document.getElementById("custom-cursor");
     const canvas = document.getElementById("gridCanvas");
@@ -202,41 +167,50 @@
         return;
       }
 
-      const eyeRect = eyeWrapper.getBoundingClientRect();
-      const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-      const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-
-      const radiusX = (eyeRect.width / 2) + 15; 
-      const radiusY = (eyeRect.height / 2) + 10; 
-
-      ctx.save();
-      
-      ctx.beginPath();
-      ctx.ellipse(eyeCenterX, eyeCenterY, radiusX, radiusY, 0, 0, 2 * Math.PI);
-      ctx.clip();
-
-      traceGridPath();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)"; 
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      ctx.restore();
-
-      if (hasMoved) {
+      // ON MOBILE: Render grid across the entire page
+      if (isTouchDevice) {
         ctx.save();
-        const gradient = ctx.createRadialGradient(
-          mouseX, mouseY, 0,
-          mouseX, mouseY, spotlightRadius
-        );
-        gradient.addColorStop(0, "rgba(255, 255, 255, 0.25)");
-        gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.08)");
-        gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
-
         traceGridPath();
-        ctx.strokeStyle = gradient;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.restore();
+      } else {
+        // ON DESKTOP: Render eye clipped background + flashlight beam
+        const eyeRect = eyeWrapper.getBoundingClientRect();
+        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+
+        const radiusX = (eyeRect.width / 2) + 15; 
+        const radiusY = (eyeRect.height / 2) + 10; 
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.ellipse(eyeCenterX, eyeCenterY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+        ctx.clip();
+
+        traceGridPath();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.04)"; 
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+
+        if (hasMoved) {
+          ctx.save();
+          const gradient = ctx.createRadialGradient(
+            mouseX, mouseY, 0,
+            mouseX, mouseY, spotlightRadius
+          );
+          gradient.addColorStop(0, "rgba(255, 255, 255, 0.25)");
+          gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.08)");
+          gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+          traceGridPath();
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.restore();
+        }
       }
 
       requestAnimationFrame(drawGrid);
@@ -244,6 +218,8 @@
     drawGrid();
 
     window.addEventListener("mousemove", (e) => {
+      if (isTouchDevice) return;
+
       mouseX = e.clientX;
       mouseY = e.clientY;
       
@@ -267,7 +243,7 @@
     });
 
     window.addEventListener("focus", () => {
-      if (hasMoved) {
+      if (hasMoved && !isTouchDevice) {
         cursor.classList.remove("hidden");
       }
     });
