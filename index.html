@@ -88,7 +88,6 @@
 
     const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-    // Updated eye tracking logic to support pointer events across entire screen
     function updateEyePosition(clientX, clientY) {
       const rect = eyeWrapper.getBoundingClientRect();
       const eyeCenterX = rect.left + rect.width / 2;
@@ -167,7 +166,6 @@
         return;
       }
 
-      // ON MOBILE: Render grid across the entire page
       if (isTouchDevice) {
         ctx.save();
         traceGridPath();
@@ -176,7 +174,6 @@
         ctx.stroke();
         ctx.restore();
       } else {
-        // ON DESKTOP: Render eye clipped background + flashlight beam
         const eyeRect = eyeWrapper.getBoundingClientRect();
         const eyeCenterX = eyeRect.left + eyeRect.width / 2;
         const eyeCenterY = eyeRect.top + eyeRect.height / 2;
