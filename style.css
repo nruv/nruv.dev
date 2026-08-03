@@ -18,7 +18,7 @@ html, body, button, a, input {
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  touch-action: manipulation; /* Allows taps at screen edges without browser gesture delays */
+  touch-action: manipulation;
 }
 
 body {
@@ -91,7 +91,6 @@ body {
   margin-bottom: 100px;
 }
 
-/* Eye Button Styles */
 #eyeButton {
   background: none;
   border: none;
@@ -100,10 +99,8 @@ body {
   width: 100%;
   height: 100%;
   
-  /* Disable tap highlight box on mobile */
   -webkit-tap-highlight-color: transparent;
   
-  /* Prevent blue outline / focus ring when tapped */
   -webkit-touch-callout: none;
   outline: none !important;
 }
@@ -116,7 +113,6 @@ body {
   justify-content: center;
   align-items: center;
   
-  /* Disable mobile tap highlight on wrapper as well */
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -169,7 +165,6 @@ body {
     0 0 20px rgba(255, 255, 255, 0.6);
 }
 
-/* Active scare overrides */
 body.active-scare #gridCanvas,
 body.active-scare #custom-cursor,
 body.active-scare #mainContainer {
