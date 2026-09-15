@@ -163,48 +163,51 @@
     });
   </script>
 
-  <script>
-    const phrases = [
-      "i do stuff",
-      "i@nruv.dev",
-    ];
+<script>
+  const phrases = [
+    // "i do stuff", 
+    "i@nruv.dev",
+  ];
 
-    const typing = document.getElementById("typing");
+  const typing = document.getElementById("typing");
+  typing.textContent = "i@nruv.dev";
 
-    let phrase = 0;
-    let letter = 0;
-    let deleting = false;
+  /*
+  let phrase = 0;
+  let letter = 0;
+  let deleting = false;
 
-    function typeWriter() {
-      const current = phrases[phrase];
+  function typeWriter() {
+    const current = phrases[phrase];
 
-      if (!deleting) {
-        typing.textContent = current.substring(0, letter);
-        letter++;
+    if (!deleting) {
+      typing.textContent = current.substring(0, letter);
+      letter++;
 
-        if (letter > current.length) {
-          deleting = true;
-          setTimeout(typeWriter, 1800);
-          return;
-        }
-      } else {
-        typing.textContent = current.substring(0, letter);
-        letter--;
-
-        if (letter < 0) {
-          deleting = false;
-          phrase = (phrase + 1) % phrases.length;
-          letter = 0;
-          setTimeout(typeWriter, 300);
-          return;
-        }
+      if (letter > current.length) {
+        deleting = true;
+        setTimeout(typeWriter, 1800);
+        return;
       }
+    } else {
+      typing.textContent = current.substring(0, letter);
+      letter--;
 
-      setTimeout(typeWriter, deleting ? 40 : 80);
+      if (letter < 0) {
+        deleting = false;
+        phrase = (phrase + 1) % phrases.length;
+        letter = 0;
+        setTimeout(typeWriter, 300);
+        return;
+      }
     }
 
-    typeWriter();
-  </script>
+    setTimeout(typeWriter, deleting ? 40 : 80);
+  }
+
+  typeWriter();
+  */
+</script>
 
   <script>
     const cursor = document.getElementById("custom-cursor");
