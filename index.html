@@ -43,10 +43,10 @@
           </g>
         </svg>
       </button>
-    </div>
-
+      
+    <!-- </div>
     <a href="https://nruv.dev/i" class="click-link">click me</a>
-  </div>
+  </div> -->
 
   <script>
     const text = "nruv.dev";
@@ -166,6 +166,7 @@
         return;
       }
 
+      // ON MOBILE: Render grid across the entire page
       if (isTouchDevice) {
         ctx.save();
         traceGridPath();
@@ -174,6 +175,7 @@
         ctx.stroke();
         ctx.restore();
       } else {
+        // ON DESKTOP: Render eye clipped background + flashlight beam
         const eyeRect = eyeWrapper.getBoundingClientRect();
         const eyeCenterX = eyeRect.left + eyeRect.width / 2;
         const eyeCenterY = eyeRect.top + eyeRect.height / 2;
