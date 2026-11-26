@@ -1,15 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 
-<link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="icon" type="image/png" href="assets/icon.png">
 
-<title>nruv.dev</title>
+    <title>nruv.dev</title>
 </head>
 
 <body>
@@ -23,10 +25,28 @@
     </div>
 </div>
 
-<div class="stars" id="stars">
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
+<!-- this looks kinda ass ignore plz-->
+
+<!--
+<div class="rain" id="rain">
+    <span style="--left:5%;--length:35px;--speed:5s;--delay:-3.2s;--trail:180px"></span>
+    <span style="--left:12%;--length:55px;--speed:7s;--delay:-1.4s;--trail:240px"></span>
+    <span style="--left:19%;--length:28px;--speed:5.5s;--delay:-4.1s;--trail:160px"></span>
+    <span style="--left:25%;--length:65px;--speed:8s;--delay:-2.7s;--trail:280px"></span>
+    <span style="--left:32%;--length:40px;--speed:6s;--delay:-5.2s;--trail:200px"></span>
+    <span style="--left:39%;--length:50px;--speed:7.5s;--delay:-3.8s;--trail:250px"></span>
+    <span style="--left:46%;--length:30px;--speed:5.5s;--delay:-1.9s;--trail:170px"></span>
+    <span style="--left:53%;--length:60px;--speed:8.5s;--delay:-6.3s;--trail:300px"></span>
+    <span style="--left:60%;--length:38px;--speed:6.5s;--delay:-2.2s;--trail:190px"></span>
+    <span style="--left:67%;--length:48px;--speed:5.5s;--delay:-4.7s;--trail:230px"></span>
+    <span style="--left:74%;--length:32px;--speed:7.5s;--delay:-1.1s;--trail:180px"></span>
+    <span style="--left:81%;--length:58px;--speed:6s;--delay:-5.5s;--trail:270px"></span>
+    <span style="--left:88%;--length:42px;--speed:7s;--delay:-3.4s;--trail:210px"></span>
+    <span style="--left:95%;--length:65px;--speed:5.5s;--delay:-2.5s;--trail:300px"></span>
+    <span style="--left:15%;--length:45px;--speed:8s;--delay:-6.8s;--trail:220px"></span>
+    <span style="--left:85%;--length:35px;--speed:6.5s;--delay:-4.4s;--trail:190px"></span>
 </div>
+-->
 
 <audio id="bgm" src="assets/music.mp3" loop></audio>
 
@@ -44,7 +64,7 @@
     <div class="badges">
 
         <div class="badge">
-            <img src="assets/staff.png">
+            <img src="assets/host.png">
         </div>
 
     </div>
@@ -65,21 +85,22 @@
             <div class="track" id="track">
 
                 <div class="page">
-                    <a href="https://tiktok.com/@78o" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="https://discord.com/users/141234854837616641" target="_blank"><i class="fa-brands fa-discord"></i></a>
-                    <a href="https://instagram.com/petpl_yer" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@78o" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://discord.com/users/141234854837616641" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i></a>
+                    <a href="https://instagram.com/petpl_yer" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
                 </div>
 
                 <div class="page">
-                    <a href="https://t.me/petpl_yer" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="https://www.last.fm/user/autopsy9" target="_blank"><i class="fa-brands fa-lastfm"></i></a>
-                    <a href="https://x.com/xvzxvzxzv" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://t.me/petpl_yer" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="https://www.last.fm/user/autopsy9" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-lastfm"></i></a>
+                    <a href="https://x.com/xvzxvzxzv" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
                 </div>
 
             </div>
         </div>
 
         <button class="nav" id="right" onclick="move(1)">&gt;</button>
+
     </div>
 
     <button id="muteBtn" class="mute-btn">
@@ -124,8 +145,10 @@ const pages = document.querySelectorAll(".page").length;
 
 function move(dir) {
     page += dir;
+
     if (page < 0) page = 0;
     if (page > pages - 1) page = pages - 1;
+
     track.style.transform = `translateX(-${page * 200}px)`;
 }
 </script>
@@ -150,12 +173,12 @@ entry.addEventListener("click", () => {
 
 btn.addEventListener("click", () => {
     audio.muted = !audio.muted;
+
     icon.src = audio.muted
         ? "assets/muted.png"
         : "assets/unmuted.png";
 });
 </script>
-
 
 <script>
 const phrases = [
@@ -201,7 +224,6 @@ function typeWriter() {
 typeWriter();
 </script>
 
-
 <script>
 const cursorGlow = document.getElementById("cursor-glow");
 const trailContainer = document.getElementById("cursor-trail-container");
@@ -228,7 +250,6 @@ document.addEventListener("mousemove", (e) => {
     cursorGlow.style.top = y + "px";
 
     const distance = Math.hypot(x - lastX, y - lastY);
-
     const steps = Math.max(1, Math.floor(distance / 4));
 
     for (let i = 1; i <= steps; i++) {
@@ -262,5 +283,6 @@ document.addEventListener("mouseenter", () => {
     }
 });
 </script>
+
 </body>
 </html>
